@@ -26,6 +26,14 @@ import android.view.View;
 import com.bumptech.glide.Glide;
 import com.example.muhammadelsayed.g_books.databinding.ActivityBookDetailsBinding;
 
+/*
+*
+*                    in this CLASS
+*       I'm going Update the Views with the Data
+* */
+
+
+
 public class BookDetailsActivity extends AppCompatActivity {
 
     Bundle metadata;
@@ -51,19 +59,20 @@ public class BookDetailsActivity extends AppCompatActivity {
         updateViews();
     }
 
+    //this method will update all the views of each book returned by the search task.
     private void updateViews() {
 
-        Glide.with(this).load(metadata.getString(Book.IMAGE)).into(bookInfoBinding.cover);
+        Glide.with(this).load(metadata.getString(BookData.IMAGE)).into(bookInfoBinding.cover);
 
         String unknown = getString(R.string.unknown);
 
-        bookInfoBinding.bookTitle.setText(metadata.containsKey(Book.TITLE) ? metadata.getString(Book.TITLE) : unknown);
-        bookInfoBinding.bookContents.publishedDate.append(metadata.containsKey(Book.PUBLISHED_DATE) ? metadata.getString(Book.PUBLISHED_DATE) : unknown);
-        bookInfoBinding.bookContents.publisher.append(metadata.containsKey(Book.PUBLISHER) ? metadata.getString(Book.PUBLISHER) : unknown);
-        bookInfoBinding.bookContents.pages.append(metadata.containsKey(Book.PAGES) ? metadata.getString(Book.PAGES) : unknown);
-        if (metadata.containsKey(Book.AUTHORS)) {
+        bookInfoBinding.bookTitle.setText(metadata.containsKey(BookData.TITLE) ? metadata.getString(BookData.TITLE) : unknown);
+        bookInfoBinding.bookContents.publishedDate.append(metadata.containsKey(BookData.PUBLISHED_DATE) ? metadata.getString(BookData.PUBLISHED_DATE) : unknown);
+        bookInfoBinding.bookContents.publisher.append(metadata.containsKey(BookData.PUBLISHER) ? metadata.getString(BookData.PUBLISHER) : unknown);
+        bookInfoBinding.bookContents.pages.append(metadata.containsKey(BookData.PAGES) ? metadata.getString(BookData.PAGES) : unknown);
+        if (metadata.containsKey(BookData.AUTHORS)) {
             String author = "\n";
-            String[] authors = metadata.getStringArray(Book.AUTHORS);
+            String[] authors = metadata.getStringArray(BookData.AUTHORS);
             for (int i = 0; i < authors.length; i++) {
                 String singleAuthor = authors[i];
                 if (TextUtils.isEmpty(singleAuthor)) {
@@ -73,9 +82,9 @@ public class BookDetailsActivity extends AppCompatActivity {
                 bookInfoBinding.bookContents.author.append(author);
             }
         }
-        if (metadata.containsKey(Book.CATEGORIES)) {
+        if (metadata.containsKey(BookData.CATEGORIES)) {
             String category = "\n";
-            String[] categories = metadata.getStringArray(Book.CATEGORIES);
+            String[] categories = metadata.getStringArray(BookData.CATEGORIES);
             for (int i = 0; i < categories.length; i++) {
                 String singleCategory = categories[i];
                 if (TextUtils.isEmpty(singleCategory)) {
@@ -86,13 +95,13 @@ public class BookDetailsActivity extends AppCompatActivity {
             }
         }
 
-        if (metadata.containsKey(Book.SUBTITLE)) {
-            bookInfoBinding.subtitle.setText(metadata.getString(Book.SUBTITLE));
+        if (metadata.containsKey(BookData.SUBTITLE)) {
+            bookInfoBinding.subtitle.setText(metadata.getString(BookData.SUBTITLE));
         } else {
             bookInfoBinding.subtitle.setVisibility(View.GONE);
         }
-        if (metadata.containsKey(Book.DESCRIPTION)) {
-            bookInfoBinding.bookContents.description.setText(metadata.getString(Book.DESCRIPTION));
+        if (metadata.containsKey(BookData.DESCRIPTION)) {
+            bookInfoBinding.bookContents.description.setText(metadata.getString(BookData.DESCRIPTION));
         }
     }
 

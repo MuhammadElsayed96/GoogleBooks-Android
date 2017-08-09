@@ -27,7 +27,15 @@ import java.util.List;
  * Created by Muhammad Elsayed on 8/8/2017.
  */
 
-public class BookAdapter extends RecyclerView.Adapter<BookHolder> {
+/*
+*
+* in this CLASS
+* I'm setting out the Book adapter to the main activity, to display the the returned search
+* results there. 'the Recycle View'
+*
+* */
+
+public class BookAdapter extends RecyclerView.Adapter<BookViewHolder> {
 
     private final int spanCount;
     private List<Volume> volumes;
@@ -38,12 +46,13 @@ public class BookAdapter extends RecyclerView.Adapter<BookHolder> {
     }
 
     @Override
-    public BookHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new BookHolder(parent);
+    public BookViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new BookViewHolder(parent);
     }
 
+    //setting out the span of each thumbnail, and it's position
     @Override
-    public void onBindViewHolder(BookHolder holder, int position) {
+    public void onBindViewHolder(BookViewHolder holder, int position) {
         holder.setSpanCount(spanCount);
         holder.setVolume(volumes.get(position));
     }

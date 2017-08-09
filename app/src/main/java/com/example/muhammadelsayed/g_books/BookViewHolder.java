@@ -34,21 +34,30 @@ import com.google.api.services.books.model.Volume;
  */
 
 
-    /*
-    * IN THIS CALSS I'M GOING TO:
-    * Parsing the Response of the JSON
-    * */
+/*
+* In This CLASS...
+*
+*                      Parsing the Response of the JSON
+*
+* I'll fetch the data from the JSON response,
+* I'll implement the data of the POP UP activity that holds the details for each Book
+* returned from the Search
+*
+* */
 
-public class BookHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+public class BookViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     private Volume volume;
     private int spanCount;
 
-    public BookHolder(ViewGroup viewGroup) {
+    public BookViewHolder(ViewGroup viewGroup) {
         super(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.view_book, viewGroup, false));
         itemView.setOnClickListener(this);
     }
 
+
+    //setting the width and height 'Display Matrix' of each Thumbnail 'Image'
     public void setVolume(Volume volume) {
         this.volume = volume;
 
@@ -70,6 +79,9 @@ public class BookHolder extends RecyclerView.ViewHolder implements View.OnClickL
         itemView.setLayoutParams(params);
         itemView.invalidate();
 
+
+        //Getting the Image Links from the JSON object to display it in the View.
+        //Putting the appropriate image to each matrix to display it on the screen
         Volume.VolumeInfo.ImageLinks imageLinks = volume.getVolumeInfo().getImageLinks();
 
         if (imageLinks != null) {
@@ -104,10 +116,14 @@ public class BookHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
     }
 
+    //set the span
     public void setSpanCount(int spanCount) {
         this.spanCount = spanCount;
     }
 
+
+    //for each Image that will be displayed, Here's its data, the data that will be displayed
+    //from the JSON object of each Book in the search results on the Pop up activity.
     @Override
     public void onClick(View v) {
 
@@ -120,43 +136,44 @@ public class BookHolder extends RecyclerView.ViewHolder implements View.OnClickL
         if (volumeInfo != null) {
             Volume.VolumeInfo.ImageLinks imageLinks = volumeInfo.getImageLinks();
             if (volumeInfo.getTitle() != null) {
-                metadata.putString(Book.TITLE, volumeInfo.getTitle());
+                metadata.putString(BookData.TITLE, volumeInfo.getTitle());
             }
 
             if (volumeInfo.getSubtitle() != null) {
-                metadata.putString(Book.SUBTITLE, volumeInfo.getSubtitle());
+                metadata.putString(BookData.SUBTITLE, volumeInfo.getSubtitle());
             }
             if (volumeInfo.getDescription() != null) {
-                metadata.putString(Book.DESCRIPTION, volumeInfo.getDescription());
+                metadata.putString(BookData.DESCRIPTION, volumeInfo.getDescription());
             }
             if (volumeInfo.getPublisher() != null) {
-                metadata.putString(Book.PUBLISHER, volumeInfo.getPublisher());
+                metadata.putString(BookData.PUBLISHER, volumeInfo.getPublisher());
             }
             if (volumeInfo.getAuthors() != null) {
-                metadata.putStringArray(Book.AUTHORS, volumeInfo.getAuthors().toArray(new String[volumeInfo.getAuthors().size()]));
+                metadata.putStringArray(BookData.AUTHORS, volumeInfo.getAuthors().toArray(new String[volumeInfo.getAuthors().size()]));
             }
             if (volumeInfo.getCategories() != null) {
-                metadata.putStringArray(Book.CATEGORIES, volumeInfo.getCategories().toArray(new String[volumeInfo.getCategories().size()]));
+                metadata.putStringArray(BookData.CATEGORIES, volumeInfo.getCategories().toArray(new String[volumeInfo.getCategories().size()]));
             }
             if (volumeInfo.getPageCount() != null) {
-                metadata.putString(Book.PAGES, String.valueOf(volumeInfo.getPageCount()));
+                metadata.putString(BookData.PAGES, String.valueOf(volumeInfo.getPageCount()));
             }
             if (volumeInfo.getPublishedDate() != null) {
-                metadata.putString(Book.PUBLISHED_DATE, volumeInfo.getPublishedDate());
+                metadata.putString(BookData.PUBLISHED_DATE, volumeInfo.getPublishedDate());
             }
             if (saleInfo != null) {
                 Volume.SaleInfo.RetailPrice retailPrice = saleInfo.getRetailPrice();
                 Volume.SaleInfo.ListPrice listPrice = saleInfo.getListPrice();
                 if (retailPrice != null) {
-                    metadata.putDouble(Book.RETAIL_PRICE, retailPrice.getAmount());
-                    metadata.putString(Book.RETAIL_PRICE_CURRENCY_CODE, retailPrice.getCurrencyCode());
+                    metadata.putDouble(BookData.RETAIL_PRICE, retailPrice.getAmount());
+                    metadata.putString(BookData.RETAIL_PRICE_CURRENCY_CODE, retailPrice.getCurrencyCode());
                 }
                 if (listPrice != null) {
-                    metadata.putDouble(Book.LIST_PRICE, listPrice.getAmount());
-                    metadata.putString(Book.LIST_PRICE_CURRENCY_CODE, listPrice.getCurrencyCode());
+                    metadata.putDouble(BookData.LIST_PRICE, listPrice.getAmount());
+                    metadata.putString(BookData.LIST_PRICE_CURRENCY_CODE, listPrice.getCurrencyCode());
                 }
             }
 
+            //Putting the appropriate Image.
             if (imageLinks != null) {
                 String image = null;
                 if (imageLinks.getExtraLarge() != null) {
@@ -173,11 +190,12 @@ public class BookHolder extends RecyclerView.ViewHolder implements View.OnClickL
                     image = imageLinks.getSmallThumbnail();
                 }
                 if (image != null) {
-                    metadata.putString(Book.IMAGE, image);
+                    metadata.putString(BookData.IMAGE, image);
                 }
             }
         }
 
+        //send the data to the Intent, then starting the pop up Activity.
         Context context = itemView.getContext();
         context.startActivity(new Intent(context, BookDetailsActivity.class).putExtra("metadata", metadata));
     }

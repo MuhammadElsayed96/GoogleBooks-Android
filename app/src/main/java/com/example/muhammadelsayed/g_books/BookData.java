@@ -27,7 +27,7 @@ package com.example.muhammadelsayed.g_books;
 *
 * */
 
-public class Book{
+public class BookData {
     public static final String TITLE = "title";
     public static final String SUBTITLE = "subtitle";
     public static final String DESCRIPTION = "description";

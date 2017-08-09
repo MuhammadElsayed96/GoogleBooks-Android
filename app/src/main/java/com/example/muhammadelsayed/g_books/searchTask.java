@@ -39,55 +39,55 @@ import java.util.List;
 * use an AsyncTask to handle the THREADINGS
 *
 * */
-public class searchQuery extends AsyncTask<String, Void, List<Volume>> {
+public class searchTask extends AsyncTask<String, Void, List<Volume>> {
 
-private SearchListener searchListener;
+    private SearchListener searchListener;
 
-public void setSearchListener(SearchListener searchListener) {
+    public void setSearchListener(SearchListener searchListener) {
         this.searchListener = searchListener;
-        }
+    }
 
-@Override
-protected void onPreExecute() {
+    @Override
+    protected void onPreExecute() {
         super.onPreExecute();
         searchListener.onSearching();
-        }
+    }
 
-@Override
-protected List<Volume> doInBackground(String... params) {
+    @Override
+    protected List<Volume> doInBackground(String... params) {
 
         String query = params[0];
 
         // If the query seems to be an ISBN we add the isbn special keyword https://developers.google.com/books/docs/v1/using#PerformingSearch
         if (Ints.tryParse(query) != null && (query.length() == 13 || query.length() == 10)) {
-        query = query.concat("+isbn:" + query);
+            query = query.concat("+isbn:" + query);
         }
 
         // Creates the books api client
         Books books = new Books.Builder(AndroidHttp.newCompatibleTransport(), AndroidJsonFactory.getDefaultInstance(), null)
-        .setApplicationName(BuildConfig.APPLICATION_ID)
-        .build();
+                .setApplicationName(BuildConfig.APPLICATION_ID)
+                .build();
 
         try {
-        // Executes the query
-        Books.Volumes.List list = books.volumes().list(query).setProjection("LITE");
-        return list.execute().getItems();
+            // Executes the query
+            Books.Volumes.List list = books.volumes().list(query).setProjection("LITE");
+            return list.execute().getItems();
         } catch (IOException e) {
-        e.printStackTrace();
-        return Collections.emptyList();
+            e.printStackTrace();
+            return Collections.emptyList();
         }
-        }
+    }
 
-@Override
-protected void onPostExecute(List<Volume> volumes) {
+    //  This method won't be invoked if the task was cancelled
+    @Override
+    protected void onPostExecute(List<Volume> volumes) {
         super.onPostExecute(volumes);
         searchListener.onResult(volumes == null ? Collections.<Volume>emptyList() : volumes);
-        }
+    }
 
-public interface SearchListener {
-    void onSearching();
+    public interface SearchListener {
+        void onSearching();
 
-    void onResult(List<Volume> volumes);
-}
-
+        void onResult(List<Volume> volumes);
+    }
 }

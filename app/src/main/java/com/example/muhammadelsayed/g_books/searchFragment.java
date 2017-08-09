@@ -30,12 +30,18 @@ import java.util.List;
  * Created by Muhammad Elsayed on 8/8/2017.
  */
 
-public class searchFragment extends Fragment implements searchQuery.SearchListener {
+/*
+*                      in This CLASS
+*       I'll implement the searchFragment Lifecycle.
+*
+* */
+
+public class searchFragment extends Fragment implements searchTask.SearchListener {
 
     private boolean searching;
 
-    private searchQuery searchTask;
-    private searchQuery.SearchListener searchListener;
+    private searchTask searchTask;
+    private searchTask.SearchListener searchListener;
 
     private String latestQuery;
     private List<Volume> volumeList = new ArrayList<>();
@@ -43,14 +49,17 @@ public class searchFragment extends Fragment implements searchQuery.SearchListen
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        searchListener = (searchQuery.SearchListener) context;
+        searchListener = (searchTask.SearchListener) context;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //Saving the Fragment State
         setRetainInstance(true);
     }
+
 
     public void searchBooks(String query) {
         if (query.equalsIgnoreCase(latestQuery)) {
@@ -60,7 +69,7 @@ public class searchFragment extends Fragment implements searchQuery.SearchListen
             searchTask.cancel(true);
         }
         latestQuery = query;
-        searchTask = new searchQuery();
+        searchTask = new searchTask();
         searchTask.setSearchListener(this);
         searchTask.execute(query);
     }
@@ -78,6 +87,7 @@ public class searchFragment extends Fragment implements searchQuery.SearchListen
         volumeList = volumes;
         searchListener.onResult(volumeList);
     }
+
 
     public String getLatestQuery() {
         return latestQuery;

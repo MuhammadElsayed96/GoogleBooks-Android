@@ -31,9 +31,12 @@ import com.google.api.services.books.model.Volume;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements searchQuery.SearchListener {
+public class MainActivity extends AppCompatActivity implements searchTask.SearchListener {
 
     private List<Volume> volumeList;
+
+    //I've combined 2 View together, "activity_book_details.xml" & "book_contents.xml"
+    //I've bind them together.
     private ActivityMainBinding binding;
 
     @Override
@@ -60,6 +63,8 @@ public class MainActivity extends AppCompatActivity implements searchQuery.Searc
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setAdapter(adapter);
 
+        //Running the search query after Typing the Name of the Book or the Author.
+        //then displaying the results.
         binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -78,6 +83,10 @@ public class MainActivity extends AppCompatActivity implements searchQuery.Searc
 
     }
 
+    //              DURING the Search Process
+    //in need to clear the list of the Volumes during the search Task.
+    //then I'll Notify the registered observers, which is 'ActivityMainBinding' that the data set has changed.
+    //and Displaying the Loading view while executing the Background task.
     @Override
     public void onSearching() {
         volumeList.clear();
@@ -85,6 +94,10 @@ public class MainActivity extends AppCompatActivity implements searchQuery.Searc
         binding.loadingView.setVisibility(View.VISIBLE);
     }
 
+    //              When receiving the Data
+    //I'll hide the Loading view.
+    //I'll add the received list to the volumeList.
+    //And I'll notify the 'ActivityMainBinding'
     @Override
     public void onResult(List<Volume> volumes) {
         binding.loadingView.setVisibility(View.GONE);
